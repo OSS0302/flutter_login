@@ -41,7 +41,23 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container();
+  }
+}
+
+class RootPage extends StatelessWidget {
+  const RootPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) { // 로그인 상태인지
+    return Scaffold(
+      appBar:  AppBar(
+        title:  Text('Root'),
+      ),
+      body: Container(
+
+      ),
+    );
   }
 }
 
