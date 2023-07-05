@@ -17,9 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue
       ),
       home: RootPage(),
     );
@@ -40,9 +38,13 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('LoginPage'),
       ),
-      body: Center(
-        child: Text('Login Page'),
+      body:  Center(
+    child: ElevatedButton(
+    child: Text('sign up'),
+    onPressed: () {authRepository.setAuthState(AuthState.Authenticated);
+        },
       ),
+    ),
     );
   }
 }
@@ -56,16 +58,15 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('MainPage'),
       ),
-      body: Center(
-        child: Text('Main Page'),
+      body:  Center(
+        child: Text('LoginPage'),
       ),
     );
   }
 }
 // 상태 정의하기
 enum AuthState {
-  Authenticated,
-  UnAuthenticated, //Authenticated : 인증 된거 UnAuthenticated 안증 안된거
+  Authenticated, UnAuthenticated, //Authenticated : 인증 된거 UnAuthenticated 안증 안된거
 }
 //상태 저장 공간 클래스
 class AuthRepository{
@@ -87,7 +88,9 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) { // 로그인 상태인지
-    return StreamBuilder<AuthState>(builder: (BuildContext context,
+    return StreamBuilder<AuthState>(
+      stream: authRepository.authStream,
+      builder: (BuildContext context,
         AsyncSnapshot snapshot){
       if(snapshot.data == AuthState.UnAuthenticated){
         return LoginPage();
