@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+final authRepository = AuthRepository(); // 최상단에 선언
+
 void main() {
   runApp(const MyApp());
 }
@@ -67,11 +69,16 @@ enum AuthState {
 }
 //상태 저장 공간 클래스
 class AuthRepository{
-  AuthState _auth = AuthState.UnAuthenticated;
+
   final _streamController = StreamController<AuthState>()
   ..add(AuthState.UnAuthenticated);
 
-  get authStream => _streamController.stream;
+  get authStream => _streamController.stream; // 자동으로 통제 되도록 한다.
+  //상태 값을 변경하려면
+setAuthState(AuthState state){
+  _streamController.add(state); //스트림 컨트롤러 추가
+}
+
 }
 
 //로그인 페이지 로갈 지 메인 페이지 가는 루트 페이지
@@ -84,7 +91,12 @@ class RootPage extends StatelessWidget {
       appBar:  AppBar(
         title:  Text('Root'),
       ),
-      body: Container(),
+      body: StreamBuilder(
+        stream: , // 어디 스트림에서 오는지 지정해야한다.
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+
+        },
+      ),
     );
 
   }
