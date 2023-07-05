@@ -87,19 +87,14 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) { // 로그인 상태인지
-    return Scaffold(
-      appBar:  AppBar(
-        title:  Text('Root'),
-      ),
-      body: StreamBuilder<AuthState>(builder: (BuildContext context,
+    return StreamBuilder<AuthState>(builder: (BuildContext context,
         AsyncSnapshot snapshot){
-        if(snapshot.data == AuthState.UnAuthenticated){
-          return LoginPage();
-        }else{
-          return MainPage();
-        }
-      },
-      ),
+      if(snapshot.data == AuthState.UnAuthenticated){
+        return LoginPage();
+      }else{
+        return MainPage();
+      }
+    },
     );
 
   }
