@@ -59,7 +59,11 @@ class MainPage extends StatelessWidget {
         title: Text('MainPage'),
       ),
       body:  Center(
-        child: Text('LoginPage'),
+        child:  ElevatedButton(
+          child: Text('sign out'),
+          onPressed: () {authRepository.setAuthState(AuthState.UnAuthenticated);
+          },
+        ),
       ),
     );
   }
