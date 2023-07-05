@@ -49,8 +49,9 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: ElevatedButton(
           child: Text('sign up'),
+
           onPressed: () {
-            Provider.of<AuthRepository>(context , listen: false).authState = AuthState.Authenticated;
+            Provider.of<AuthRepository>(context , listen: false).setState(AuthState.Authenticated);
           },
         ),
       ),
@@ -71,7 +72,7 @@ class MainPage extends StatelessWidget {
         child: ElevatedButton(
           child: Text('sign out'),
           onPressed: () {
-            Provider.of<AuthRepository>(context, listen: false).authState = AuthState.UnAuthenticated; // 단발성 일떄 listen.false 을 사용하지 않으면 대기 상태가 되어서 오류가 난다.
+            Provider.of<AuthRepository>(context, listen: false).setState(AuthState.UnAuthenticated); // 단발성 일떄 listen.false 을 사용하지 않으면 대기 상태가 되어서 오류가 난다.
           },
         ),
       ),
@@ -88,6 +89,10 @@ enum AuthState {
 //상태 저장 공간 클래스
 class AuthRepository with ChangeNotifier {
   AuthState authState = AuthState.UnAuthenticated;
+  setState(AuthState state){
+   authState =state;
+   notifyListeners();
+  }
 }
 
 //로그인 페이지 로갈 지 메인 페이지 가는 루트 페이지
