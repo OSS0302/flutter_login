@@ -91,11 +91,14 @@ class RootPage extends StatelessWidget {
       appBar:  AppBar(
         title:  Text('Root'),
       ),
-      body: StreamBuilder(
-        stream: , // 어디 스트림에서 오는지 지정해야한다.
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-
-        },
+      body: StreamBuilder<AuthState>(builder: (BuildContext context,
+        AsyncSnapshot snapshot){
+        if(snapshot.data == AuthState.UnAuthenticated){
+          return LoginPage();
+        }else{
+          return MainPage();
+        }
+      },
       ),
     );
 
