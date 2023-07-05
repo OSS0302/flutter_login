@@ -1,11 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-final authRepository = AuthRepository(); // 최상단에 선언
+final authRepository = AuthRepository(); // 최상단에 선언 해서 싱글톤으로 사용되고있다.
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      child: MyApp(),
+      providers: [
+        ChangeNotifierProvider.value(
+          value: AuthRepository(),
+        ),
+      ],
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,9 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: RootPage(),
     );
   }
@@ -38,13 +46,14 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('LoginPage'),
       ),
-      body:  Center(
-    child: ElevatedButton(
-    child: Text('sign up'),
-    onPressed: () {authRepository.setAuthState(AuthState.Authenticated);
-        },
+      body: Center(
+        child: ElevatedButton(
+          child: Text('sign up'),
+          onPressed: () {
+            Provider.of<AuthRepository>(context).authState = AuthState.Authenticated;
+          },
+        ),
       ),
-    ),
     );
   }
 }
@@ -58,32 +67,27 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('MainPage'),
       ),
-      body:  Center(
-        child:  ElevatedButton(
+      body: Center(
+        child: ElevatedButton(
           child: Text('sign out'),
-          onPressed: () {authRepository.setAuthState(AuthState.UnAuthenticated);
+          onPressed: () {
+            Provider.of<AuthRepository>(context).authState = AuthState.UnAuthenticated;
           },
         ),
       ),
     );
   }
 }
+
 // 상태 정의하기
 enum AuthState {
-  Authenticated, UnAuthenticated, //Authenticated : 인증 된거 UnAuthenticated 안증 안된거
+  Authenticated,
+  UnAuthenticated, //Authenticated : 인증 된거 UnAuthenticated 안증 안된거
 }
+
 //상태 저장 공간 클래스
-class AuthRepository{
-
-  final _streamController = StreamController<AuthState>()
-  ..add(AuthState.UnAuthenticated);
-
-  get authStream => _streamController.stream; // 자동으로 통제 되도록 한다.
-  //상태 값을 변경하려면
-setAuthState(AuthState state){
-  _streamController.add(state); //스트림 컨트롤러 추가
-}
-
+class AuthRepository with ChangeNotifier {
+  AuthState authState = AuthState.UnAuthenticated;
 }
 
 //로그인 페이지 로갈 지 메인 페이지 가는 루트 페이지
@@ -91,19 +95,9 @@ class RootPage extends StatelessWidget {
   const RootPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) { // 로그인 상태인지
-    return StreamBuilder<AuthState>(
-      stream: authRepository.authStream,
-      builder: (BuildContext context,
-        AsyncSnapshot snapshot){
-      if(snapshot.data == AuthState.UnAuthenticated){
-        return LoginPage();
-      }else{
-        return MainPage();
-      }
-    },
-    );
-
+  Widget build(BuildContext context) {
+   AuthState authState = Provider.of<AuthRepository>(context).authState;
+    // 로그인 상태인지
+    return authState == AuthState.UnAuthenticated ? LoginPage() : MainPage();
   }
 }
-
