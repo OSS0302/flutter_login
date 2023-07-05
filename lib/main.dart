@@ -70,6 +70,8 @@ class AuthRepository{
   AuthState _auth = AuthState.UnAuthenticated;
   final _streamController = StreamController<AuthState>()
   ..add(AuthState.UnAuthenticated);
+
+  get authStream => _streamController.stream;
 }
 
 //로그인 페이지 로갈 지 메인 페이지 가는 루트 페이지
