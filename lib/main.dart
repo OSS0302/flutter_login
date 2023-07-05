@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -63,7 +65,12 @@ enum AuthState {
   Authenticated,
   UnAuthenticated, //Authenticated : 인증 된거 UnAuthenticated 안증 안된거
 }
-
+//상태 저장 공간 클래스
+class AuthRepository{
+  AuthState _auth = AuthState.UnAuthenticated;
+  final _streamController = StreamController<AuthState>()
+  ..add(AuthState.UnAuthenticated);
+}
 
 //로그인 페이지 로갈 지 메인 페이지 가는 루트 페이지
 class RootPage extends StatelessWidget {
